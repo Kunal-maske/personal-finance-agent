@@ -112,13 +112,15 @@ async function submitForm(endpoint, data, resultElement, loaderElement, resultTy
     resultElement.style.display = 'none';
     
     try {
-        const response = await fetch(endpoint, {
+        const baseUrl = 'https://personal-finance-agent-t8sx.onrender.com';
+        const response = await fetch(`${baseUrl}${endpoint}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams(data)
         });
+        
         
         const responseData = await response.json();
         

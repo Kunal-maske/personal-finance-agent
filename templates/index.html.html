@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWise - Personal Finance Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon" data-icon="chartLine"></div>
+                FinWise
+            </div>
+        </header>
+        
+        <h1>Your Personal Finance Assistant</h1>
+        <p class="tagline">Smart financial planning powered by AI</p>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="finance-plan">
+                <span class="tab-icon" data-icon="calculator"></span>
+                Financial Planning
+            </div>
+            <div class="tab" data-tab="research">
+                <span class="tab-icon" data-icon="search"></span>
+                Financial Research
+            </div>
+        </div>
+        
+        <div class="tab-content active" id="finance-plan">
+            <div class="card">
+                <h2>Generate Your Financial Plan</h2>
+                <form id="finance-form">
+                    <div class="form-group">
+                        <label class="form-label" for="financial-goals">What are your financial goals?</label>
+                        <textarea class="form-control" id="financial-goals" name="financial_goals" 
+                            placeholder="E.g., I want to save for retirement, buy a house in 5 years, pay off student loans..."
+                            required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="current-situation">What is your current financial situation?</label>
+                        <textarea class="form-control" id="current-situation" name="current_situation"
+                            placeholder="E.g., I'm 30 years old, earn $60,000/year, have $10,000 in savings, $20,000 in student loans..."
+                            required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <span class="btn-icon" data-icon="magic"></span>
+                        Generate Financial Plan
+                        <span class="loader" id="plan-loader"></span>
+                    </button>
+                </form>
+                
+                <div class="result" id="plan-result"></div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon" data-icon="bullseye"></div>
+                    <h3 class="feature-title">Personalized Goals</h3>
+                    <p class="feature-description">Get a financial plan tailored to your specific goals and circumstances.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon" data-icon="coins"></div>
+                    <h3 class="feature-title">Investment Strategies</h3>
+                    <p class="feature-description">Discover investment options aligned with your risk tolerance and timeline.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon" data-icon="shield"></div>
+                    <h3 class="feature-title">Risk Assessment</h3>
+                    <p class="feature-description">Understand potential risks and get strategies to protect your financial future.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="research">
+            <div class="card">
+                <h2>Research Financial Topics</h2>
+                <form id="research-form">
+                    <div class="form-group">
+                        <label class="form-label" for="query">What financial topic would you like to research?</label>
+                        <textarea class="form-control" id="query" name="query" 
+                            placeholder="E.g., Best ETFs for retirement, How to pay off student loans faster, Tax-advantaged investment accounts..."
+                            required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <span class="btn-icon" data-icon="search"></span>
+                        Get Research
+                        <span class="loader" id="research-loader"></span>
+                    </button>
+                </form>
+                
+                <div class="result" id="research-result"></div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon" data-icon="book"></div>
+                    <h3 class="feature-title">In-depth Analysis</h3>
+                    <p class="feature-description">Get comprehensive information on financial topics that interest you.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon" data-icon="graduation"></div>
+                    <h3 class="feature-title">Financial Education</h3>
+                    <p class="feature-description">Learn about complex financial concepts in easy-to-understand terms.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon" data-icon="lightbulb"></div>
+                    <h3 class="feature-title">Smart Insights</h3>
+                    <p class="feature-description">Discover strategies and tips that financial experts recommend.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            &copy; 2023 FinWise. All rights reserved. Powered by advanced AI technology.
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

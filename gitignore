@@ -1,0 +1,7 @@
+.env
+droll-agents
+__pycache__
+*.pyc
+.DS_Store.env
+droll-agents
+__pycache__

@@ -6,7 +6,9 @@ from llm_helper import get_groq_llm, generate_financial_plan, get_financial_rese
 # Load environment variables
 load_dotenv()
 
+# Create Flask app and configure base URL
 app = Flask(__name__)
+app.config['BASE_URL'] = 'https://personal-finance-agent-t8sx.onrender.com'
 
 @app.route('/')
 def index():

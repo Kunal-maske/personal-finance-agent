@@ -1,5 +1,6 @@
 /**
- * FinWise Personal Finance Assistant - Main JavaScript
+ * Droll Agents - FinWise Personal Finance Assistant
+ * JavaScript for managing UI interactions and API requests
  */
 
 // SVG Icons for use throughout the app
@@ -17,25 +18,48 @@ const ICONS = {
 };
 
 // DOM elements
-const tabs = document.querySelectorAll('.tab');
-const tabContents = document.querySelectorAll('.tab-content');
-const financeForm = document.getElementById('finance-form');
-const researchForm = document.getElementById('research-form');
-const planResult = document.getElementById('plan-result');
-const researchResult = document.getElementById('research-result');
-const planLoader = document.getElementById('plan-loader');
-const researchLoader = document.getElementById('research-loader');
+let tabs, tabContents, financeForm, researchForm, planResult, researchResult, planLoader, researchLoader, backButton;
+
+/**
+ * Initialize the application once the DOM is loaded
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    initApp();
+});
 
 /**
  * Initialize the application
  */
 function initApp() {
+    // Get DOM elements
+    tabs = document.querySelectorAll('.tab');
+    tabContents = document.querySelectorAll('.tab-content');
+    financeForm = document.getElementById('finance-form');
+    researchForm = document.getElementById('research-form');
+    planResult = document.getElementById('plan-result');
+    researchResult = document.getElementById('research-result');
+    planLoader = document.getElementById('plan-loader');
+    researchLoader = document.getElementById('research-loader');
+    backButton = document.querySelector('.back-button');
+    
     // Insert SVG icons
     insertIcons();
     
     // Set up event listeners
     setupTabSwitching();
     setupFormSubmissions();
+    setupBackButton();
+    
+    // Focus first input for better UX
+    setTimeout(() => {
+        const firstInput = document.getElementById('financial-goals');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    }, 500);
+    
+    // Add form field animations
+    enhanceFormFields();
 }
 
 /**
@@ -60,11 +84,62 @@ function setupTabSwitching() {
             
             // Remove active class from all tabs and contents
             tabs.forEach(t => t.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
+            tabContents.forEach(c => {
+                c.classList.remove('active');
+                // Add fade out effect
+                c.style.opacity = '0';
+            });
             
             // Add active class to current tab and content
             this.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+            const currentContent = document.getElementById(tabId);
+            currentContent.classList.add('active');
+            
+            // Add fade in effect
+            setTimeout(() => {
+                currentContent.style.opacity = '1';
+                currentContent.style.transition = 'opacity 0.3s ease';
+            }, 50);
+        });
+    });
+}
+
+/**
+ * Set up back button functionality
+ */
+function setupBackButton() {
+    if (backButton) {
+        backButton.addEventListener('mouseenter', function() {
+            const svg = this.querySelector('svg');
+            if (svg) {
+                svg.style.transform = 'translateX(-3px)';
+            }
+        });
+        
+        backButton.addEventListener('mouseleave', function() {
+            const svg = this.querySelector('svg');
+            if (svg) {
+                svg.style.transform = '';
+            }
+        });
+    }
+}
+
+/**
+ * Enhance form fields with animations and effects
+ */
+function enhanceFormFields() {
+    document.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+            this.style.borderColor = 'var(--primary-light)';
+            this.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.2)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
         });
     });
 }
@@ -109,8 +184,24 @@ function setupFormSubmissions() {
 async function submitForm(endpoint, data, resultElement, loaderElement, resultType) {
     // Show loading indicator
     loaderElement.style.display = 'inline-block';
-    resultElement.style.display = 'none';
     
+    // Add subtle animation to the button
+    const submitButton = loaderElement.closest('button');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.style.transform = 'scale(0.98)';
+    }
+    
+    // Hide previous results with fade out
+    if (resultElement.style.display === 'block') {
+        resultElement.style.opacity = '0';
+        setTimeout(() => {
+            resultElement.style.display = 'none';
+        }, 300);
+    } else {
+        resultElement.style.display = 'none';
+    }
+
     try {
         const baseUrl = 'https://personal-finance-agent-t8sx.onrender.com';
         const response = await fetch(`${baseUrl}${endpoint}`, {
@@ -121,25 +212,39 @@ async function submitForm(endpoint, data, resultElement, loaderElement, resultTy
             body: new URLSearchParams(data)
         });
         
-        
         const responseData = await response.json();
         
         if (response.ok) {
             // Format the response
             const formattedResponse = formatResponse(responseData[resultType]);
+            
+            // Display the result with fade in
             resultElement.innerHTML = formattedResponse;
+            resultElement.style.opacity = '0';
             resultElement.style.display = 'block';
             
-            // Scroll to results with smooth animation
-            resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            setTimeout(() => {
+                resultElement.style.opacity = '1';
+                resultElement.style.transition = 'opacity 0.5s ease';
+                
+                // Scroll to results with smooth animation
+                resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 50);
         } else {
             showError(resultElement, responseData.error || 'Something went wrong');
         }
     } catch (error) {
-        showError(resultElement, error.message);
+        console.error('Error submitting form:', error);
+        showError(resultElement, error.message || 'An unexpected error occurred');
     } finally {
         // Hide loading indicator
         loaderElement.style.display = 'none';
+        
+        // Reset button state
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.style.transform = '';
+        }
     }
 }
 
@@ -230,8 +335,14 @@ function formatResponse(text) {
  */
 function showError(element, message) {
     element.innerHTML = `<div class="error-message">Error: ${message}</div>`;
+    element.style.opacity = '0';
     element.style.display = 'block';
+    
+    setTimeout(() => {
+        element.style.opacity = '1';
+        element.style.transition = 'opacity 0.5s ease';
+        
+        // Scroll to error message
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
 }
-
-// Initialize the app when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initApp);

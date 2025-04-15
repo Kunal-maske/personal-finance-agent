@@ -7,3 +7,8 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
+      - key: GROQ_API_KEY
+        sync: false
+    config:
+      maxBodySize: "10M"
+      timeoutSeconds: 120

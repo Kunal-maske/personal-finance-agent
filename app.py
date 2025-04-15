@@ -1,14 +1,14 @@
 import os
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
 from llm_helper import get_groq_llm, generate_financial_plan, get_financial_research
 
 # Load environment variables
 load_dotenv()
 
-# Create Flask app and configure base URL
 app = Flask(__name__)
-app.config['BASE_URL'] = 'https://personal-finance-agent-t8sx.onrender.com'
+CORS(app) 
 
 @app.route('/')
 def index():
